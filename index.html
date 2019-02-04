@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <link href="style.css" rel="stylesheet" type = "text/css"/>
+    </head>
+
+    <body>
+        
+        <!-- CANVAS -->
+        <canvas id="triangle" width="600" height="300"></canvas>
+
+        <script>
+        
+        window.onload=function() {
+            canv=document.getElementById("triangle");
+            ctx=canv.getContext("2d");
+            document.addEventListener("keydown", startInterval);
+            createTriangle();
+        }
+
+        canv=document.getElementById("triangle");
+
+        // Set canvas dimensions based on window dimensions (cross-browser)
+        var browserHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        var browserWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        canv.height = browserHeight;
+        canv.width = browserWidth;
+
+        // Find length of sides from browser height using Pythagoras' theorem
+        var sideLength = Math.round((((canv.height ** 2) + ((canv.height / 2) ** 2)) ** 0.5))
+
+        // Define triangle (X,Y) coords on canvas
+        var cornerPoints = [[canv.width / 2, 0],[(canv.width / 2) + (sideLength / 2),canv.height-1],[(canv.width / 2) - (sideLength / 2),canv.height-1]];
+                
+        function createTriangle () {
+            // Triangle colour scheme
+            ctx.fillStyle="#006400";
+            ctx.strokeStyle ="#006400";
+
+            // draw outer triangle
+            ctx.beginPath();
+            ctx.moveTo(cornerPoints[2][0],cornerPoints[2][1]);
+            for (i=0; i <= 2; i++) {
+                ctx.lineTo(cornerPoints[i][0],cornerPoints[i][1]);
+            }
+            ctx.stroke();
+        }
+
+        var frameInterval;
+        var fps = 500;
+        function startInterval () {
+            if (!frameInterval) {
+                frameInterval = setInterval(newPoint,1000 / fps);
+            } else {
+                clearInterval(frameInterval);
+                frameInterval = false;
+            }
+        
+        }
+        
+        let lastPointX = cornerPoints[0][0];
+        let lastPointY = cornerPoints[0][1];
+        
+        
+        function newPoint () {
+            // Start with the top corner point
+        
+            // Pick random corner point
+            let randCorner = Math.floor(Math.random() * 3);
+        
+            // Create new point
+            if (lastPointX != cornerPoints[randCorner][0]) {
+                lastPointX += Math.floor(((cornerPoints[randCorner][0]) - lastPointX) / 2);
+            }
+            if (lastPointY != cornerPoints[randCorner][1]) {
+                lastPointY += Math.floor(((cornerPoints[randCorner][1]) - lastPointY) / 2);
+            }
+            // highlight new point
+            ctx.fillRect(lastPointX,lastPointY, 1, 1);
+        
+        }
+        
+        
+        
+        </script>
+
+    </body>
+</html>
